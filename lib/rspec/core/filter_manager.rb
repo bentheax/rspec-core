@@ -102,6 +102,10 @@ module RSpec
         no_location_filters = locations[ex_metadata[:absolute_file_path]].empty?
         no_id_filters = ids[ex_metadata[:rerun_file_path]].empty?
 
+        if no_location_filters && !locations[File.absolute_path(ex_metadata[:rerun_file_path])].empty?
+          return false
+        end
+
         return yield if no_location_filters && no_id_filters
 
         MetadataFilter.filter_applies?(:ids, ids, ex_metadata) ||
